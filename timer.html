@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #2c3e50;
+      color: #ecf0f1;
+    }
+
+    #timer {
+      text-align: center;
+    }
+
+    button {
+      background-color: #e74c3c;
+      color: #fff;
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      margin: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #c0392b;
+    }
+
+    #display {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+
+    #log {
+      margin-left: 20px;
+      border-left: 1px solid #ccc;
+      padding-left: 20px;
+    }
+
+    #log h3 {
+      color: #3498db;
+    }
+
+    #logList {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #logList li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="timer">
+    <button onclick="startTimer()">Start</button>
+    <button onclick="pauseTimer()">Pause</button>
+    <button onclick="stopTimer()">Stop</button>
+    <p id="display">00:00:00</p>
+  </div>
+
+  <div id="log">
+    <h3>Log do Dia</h3>
+    <ul id="logList"></ul>
+  </div>
+
+  <script>
+    let timer;
+    let isTimerRunning = false;
+    let seconds = 0;
+
+    function startTimer() {
+      if (!isTimerRunning) {
+        timer = setInterval(updateTimer, 1000);
+        isTimerRunning = true;
+      }
+    }
+
+    function updateTimer() {
+      seconds++;
+      displayTime();
+    }
+
+    function displayTime() {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+
+      document.getElementById('display').innerText = formattedTime;
+    }
+
+    function pauseTimer() {
+      clearInterval(timer);
+      isTimerRunning = false;
+    }
+
+    function stopTimer() {
+      pauseTimer();
+
+      const logList = document.getElementById('logList');
+      const logItem = document.createElement('li');
+      const formattedDate = new Date().toLocaleString('pt-BR', { hour: 'numeric', minute: 'numeric', hour12: true, day: 'numeric', month: 'numeric', year: 'numeric' });
+
+      logItem.innerText = `Contagem: ${document.getElementById('display').innerText}, Data: ${formattedDate}`;
+      logList.appendChild(logItem);
+
+      seconds = 0;
+      displayTime();
+    }
+  </script>
+
+</body>
+</html>
